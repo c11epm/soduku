@@ -14,11 +14,16 @@ def readfile(path):
 
     for line in cont:
         line = line.strip("\n")
-        chars = line.split(",")
-        for i in range(len(chars)):
-            if chars[i] == "":
-                chars[i] = '0'
-        list.append(chars)
+        if "," in line:
+            chars = line.split(",")
+            for i in range(len(chars)):
+                if chars[i] == "":
+                    chars[i] = '0'
+            list.append(chars)
+        else:
+            list.append(line)
+
+
     m = Matrix(9, 9)
 
     for i in range(9):
