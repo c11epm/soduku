@@ -65,6 +65,7 @@ class Matrix:
     Please note matrix is 0 indexed, but used as 1 indexed, conversion is needed to be done in this class
     """
     def __init__(self, x, y):
+        self.possible_vals = {}
         self._matrix = []
         self._x = x
         self._y = y
@@ -100,38 +101,57 @@ class Matrix:
     def _check_row(self, row):
         vals = [0] * 10
         for i in range(self._x):
-            print self._matrix[row][i]
+            # print self._matrix[row][i]
             vals[self._matrix[row][i]] += 1
-        return self._validate_array(vals[1:])
+        return vals[1:]
 
     def _check_col(self, col):
         vals = [0] * 10
         for i in range(self._y):
             vals[self._matrix[i][col]] += 1
-            print self._matrix[i][col]
-        return self._validate_array(vals[1:])
+            # print self._matrix[i][col]
+        return vals[1:]
 
     def _check_quad(self, x, y):
-        quad = get_quadrant(x + 1, y + 1)
+        quad = get_quadrant(x, y)
         ind = get_indicies(quad)
         vals = [0] * 10
         for i in range(ind[0][1], ind[1][1] + 1):
             for j in range(ind[0][0], ind[1][0] + 1):
                 vals[self._matrix[i - 1][j - 1]] += 1
-                print self._matrix[i - 1][j - 1]
-        return self._validate_array(vals[1:])
+                # print self._matrix[i - 1][j - 1]
+        return vals[1:]
 
-    def check_coordinate(self, x, y):
-        return self._check_row(y - 1) and self._check_col(x - 1) and self._check_quad(x - 1, y - 1)
+    def _possible_values_list(self, x, y):
+        row = self._check_row(y)
+        col = self._check_col(x)
+        quad = self._check_quad(x + 1, y + 1)
 
-    def _validate_array(self, arr):
-        """
-        This should valudate an array, valid array should only consists of zeroes and ones
-        :param arr: the array
-        :return: boolean if valid
-        """
-        print arr
-        for i in range(len(arr)):
-            if arr[i] > 1:
-                return False
+        vals = []
+
+        for i in range(self._x):
+            if row[i] == 0 and col[i] == 0 and quad[i] == 0:
+                vals.append(i + 1)
+        return vals
+
+    def get_possible_values(self):
+        self.possible_vals = {}
+        for y in range(self._y):
+            for x in range(self._x):
+                if(self._matrix[y][x] == 0):
+                    s = str(y) + str(x)
+                    self.possible_vals[s] = self._possible_values_list(x, y)
+
+    def update_new_values(self):
+        for key, val in self.possible_vals.iteritems():
+            if len(self.possible_vals[key]) == 1:
+                coordinate = int(key[0]), int(key[1])
+                self._matrix[coordinate[0]][coordinate[1]] = val[0]
+
+    def is_done(self):
+        for y in range(self._y):
+            for x in range(self._x):
+                if self._matrix[y][x] == 0:
+                    return False
+
         return True

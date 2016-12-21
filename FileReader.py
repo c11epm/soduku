@@ -19,7 +19,6 @@ def readfile(path):
             if chars[i] == "":
                 chars[i] = '0'
         list.append(chars)
-    pprint.pprint(list)
     m = Matrix(9, 9)
 
     for i in range(9):
@@ -28,7 +27,10 @@ def readfile(path):
                 m.set_value_at_index(j + 1, i + 1, int(list[i][j]))
     file.close()
     print m
-    m.check_coordinate(1,1)
+    while not m.is_done():
+        m.get_possible_values()
+        m.update_new_values()
+        print m
 
 
 if __name__ == '__main__':
