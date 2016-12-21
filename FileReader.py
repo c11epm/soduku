@@ -28,6 +28,7 @@ def readfile(path):
                 m.set_value_at_index(j + 1, i + 1, int(list[i][j]))
     file.close()
     print m
+    m.check_coordinate(1,1)
 
 
 if __name__ == '__main__':

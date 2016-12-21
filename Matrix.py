@@ -44,7 +44,8 @@ def get_quadrant(x, y):
     elif 7 <= x <= 9 and 7 <= y <= 9:
         return Quadrant.rl
     else:
-        raise ValueError("X=%d, Y=%d not valid" % (x, y))
+        s = "X=%d, Y=%d not valid" % (x, y)
+        raise ValueError(s)
 
 
 class Quadrant(Enum):
@@ -97,24 +98,31 @@ class Matrix:
         #print self.__str__()
 
     def _check_row(self, row):
-        vals = [0] * 9
+        vals = [0] * 10
         for i in range(self._x):
+            print self._matrix[row][i]
             vals[self._matrix[row][i]] += 1
-        return self._validate_array(vals)
+        return self._validate_array(vals[1:])
 
     def _check_col(self, col):
-        vals = [0] * 9
+        vals = [0] * 10
         for i in range(self._y):
             vals[self._matrix[i][col]] += 1
-        return self._validate_array(vals)
+            print self._matrix[i][col]
+        return self._validate_array(vals[1:])
 
     def _check_quad(self, x, y):
-        quad = get_quadrant(x, y)
+        quad = get_quadrant(x + 1, y + 1)
         ind = get_indicies(quad)
-        vals = [0] * 9
-        
+        vals = [0] * 10
+        for i in range(ind[0][1], ind[1][1] + 1):
+            for j in range(ind[0][0], ind[1][0] + 1):
+                vals[self._matrix[i - 1][j - 1]] += 1
+                print self._matrix[i - 1][j - 1]
+        return self._validate_array(vals[1:])
 
-        return self._validate_array(vals)
+    def check_coordinate(self, x, y):
+        return self._check_row(y - 1) and self._check_col(x - 1) and self._check_quad(x - 1, y - 1)
 
     def _validate_array(self, arr):
         """
@@ -122,6 +130,7 @@ class Matrix:
         :param arr: the array
         :return: boolean if valid
         """
+        print arr
         for i in range(len(arr)):
             if arr[i] > 1:
                 return False
