@@ -1,0 +1,7 @@
+File Parse
+File to matrix
+check row/col/quadrant
+loop all not set values
+take all distinct values
+redo
+print result
