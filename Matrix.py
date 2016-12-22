@@ -138,15 +138,31 @@ class Matrix:
         self.possible_vals = {}
         for y in range(self._y):
             for x in range(self._x):
-                if(self._matrix[y][x] == 0):
+                if self._matrix[y][x] == 0:
                     s = str(y) + str(x)
                     self.possible_vals[s] = self._possible_values_list(x, y)
 
     def update_new_values(self):
+        changed = False
+        all_zero = True
         for key, val in self.possible_vals.iteritems():
             if len(self.possible_vals[key]) == 1:
+                changed = True
                 coordinate = int(key[0]), int(key[1])
                 self._matrix[coordinate[0]][coordinate[1]] = val[0]
+
+            if len(self.possible_vals[key]) < 0:
+                all_zero = False
+
+        if not changed:
+            # Make a pick and continue...
+            # Possible to backtrack
+            pass
+
+        if all_zero:
+            # No pick can be done
+            # Current board has no solution
+            pass
 
     def is_done(self):
         for y in range(self._y):
